@@ -1,0 +1,16 @@
+makeing messenger using cpp
+
+1.user interface
+
+2.networking
+
+3.backend(server)
+
+4.message protocol
+
+5. database integration
+
+i dont know how to make server so i need to learn about server
+
+
+first setup server using a networking library (boost.asio)
