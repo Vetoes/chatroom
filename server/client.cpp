@@ -11,29 +11,6 @@
 #define PORT 8080
 
 
-void *receive_messages(void *arg) {
-  int client_socket = *(int *)arg;
-  char buffer[1024];
-  int bytes_read;
-
-  std::ofstream chat_log("chat_log.txt",std::ios::app);
-  if(!chat_log){
-    std::cerr << "failed to open chat log file" << std::endl;
-    return nullptr;
-  }
-
-  while ((bytes_read = read(client_socket, buffer, 1024)) > 0) {
-    buffer[bytes_read] = '\0';
-    std::string receive_message = "[server] " + std::string(buffer);
-    std::cout << "\r" << receive_message << "\n> " <<std::flush;
-
-    chat_log << receive_message << std::endl;
-    /*std::cout << "Server: " << buffer << std::endl;*/
-  }
-  chat_log.close();
-
-  return nullptr;
-}
 std::string get_timesptamp(){
   std::time_t now = std::time(nullptr);
   char buf[80];
@@ -41,15 +18,39 @@ std::string get_timesptamp(){
   return std::string(buf);
 }
 
+void *receive_messages(void *arg) {
+  int client_socket = *(int *)arg;
+  char buffer[1024];
+  int bytes_read;
+
+  /*std::ofstream chat_log("chat_log"+get_timesptamp()+".txt",std::ios::app);*/
+  /*if(!chat_log){*/
+  /*  std::cerr << "failed to open chat log file" << std::endl;*/
+  /*  return nullptr;*/
+  /*}*/
+
+  while ((bytes_read = read(client_socket, buffer, 1024)) > 0) {
+    buffer[bytes_read] = '\0';
+    std::string receive_message = "[server] " + std::string(buffer);
+    std::cout << receive_message << std::endl;
+    /*chat_log << receive_message << std::endl;*/
+    /*std::cout << "\r" << receive_message << "\n> " <<std::flush;*/
+
+  }
+  /*chat_log.close();*/
+
+  return nullptr;
+}
+
 
 
 int main() {
-    int client_socket;
-    struct sockaddr_in server_address;
+  int client_socket;
+  struct sockaddr_in server_address;
   std::string username;
 
-  std::cout << "Enter your username: ";
-  std::getline(std::cin,username);
+  /*std::cout << "Enter your username: ";*/
+  /*std::getline(std::cin,username);*/
 
     // Create socket
     if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -79,12 +80,12 @@ int main() {
     pthread_create(&receive_thread, nullptr, receive_messages, (void *)&client_socket);
     pthread_detach(receive_thread);
 
-  std::ofstream chat_log("chat_log.txt",std::ios::app);
-  if(!chat_log){
-    std::cerr << "Failed to open chat log file" << std::endl;
-    close(client_socket);
-    return -1;
-  }
+  /*std::ofstream chat_log("chat_log.txt",std::ios::app);*/
+  /*if(!chat_log){*/
+  /*  std::cerr << "Failed to open chat log file" << std::endl;*/
+  /*  close(client_socket);*/
+  /*  return -1;*/
+  /*}*/
     // Send messages to server
     char message[1024];
     while (true) {
@@ -101,13 +102,13 @@ int main() {
     std::string timestamp =get_timesptamp();
     std::string formatted_message = "[" + timestamp + "] " + username + ": " +message;
 
-    chat_log << formatted_message <<std::endl;
+    /*chat_log << formatted_message <<std::endl;*/
 
         std::cin.getline(message, 1024);
         /*send(client_socket, message, strlen(message), 0);*/
         send(client_socket, formatted_message.c_str(), formatted_message.length(), 0);
     }
-  chat_log.close();
+  /*chat_log.close();*/
     close(client_socket);
     return 0;
 }

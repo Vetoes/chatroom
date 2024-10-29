@@ -21,6 +21,8 @@ pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 std::string get_timestamp(){
   std::time_t now = std::time(nullptr);
   char buf[80];
+  //timeptr = localtime(&now);
+  //std::strftime(buf, sizeof(buf),"%Y-%m-%d_%H-%M-%S",timeptr);
   std::strftime(buf, sizeof(buf),"%Y-%m-%d_%H-%M-%S",std::localtime(&now));
   return std::string(buf);
 }
@@ -38,7 +40,7 @@ void *handle_client(void *arg){
     return nullptr;
   }
 
-  while((bytes_read =  read(client_socket,buffer, 1024)) > 0) {
+  while((bytes_read =  read(client_socket,buffer, 1024)) > 0) { 
     buffer[bytes_read] = '\0';
     std::string received_message = "Client: " + std::string(buffer);
     std::cout << received_message << std::endl;
