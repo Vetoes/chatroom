@@ -33,18 +33,18 @@ void *handle_client(void *arg){
   char buffer[1024];
   int bytes_read;
 
-  std::ofstream client_log("client_log"+ get_timestamp()+".txt",std::ios::app);
+  /*std::ofstream client_log("client_log"+ get_timestamp()+".txt",std::ios::app);*/
 
-  if(!client_log){
-    std::cerr << "Failed to open client log file" << std::endl;
-    return nullptr;
-  }
+  /*if(!client_log){*/
+  /*  std::cerr << "Failed to open client log file" << std::endl;*/
+  /*  return nullptr;*/
+  /*}*/
 
   while((bytes_read =  read(client_socket,buffer, 1024)) > 0) { 
     buffer[bytes_read] = '\0';
     std::string received_message = "Client: " + std::string(buffer);
     std::cout << received_message << std::endl;
-    client_log << received_message << std::endl;
+    /*client_log << received_message << std::endl;*/
 
 
     pthread_mutex_lock(&clients_mutex);
@@ -56,7 +56,7 @@ void *handle_client(void *arg){
     pthread_mutex_unlock(&clients_mutex);
   }
 
-  client_log.close();
+  /*client_log.close();*/
     close(client_socket);
     clients.erase(std::remove(clients.begin(), clients.end(), client_socket), clients.end());
     pthread_mutex_unlock(&clients_mutex);
@@ -68,13 +68,13 @@ int main(){
   struct sockaddr_in address;
   int addrlen = sizeof(address);
 
-  std::string log_filename = "server_log_"+get_timestamp()+".txt";
-  std::ofstream server_log(log_filename,std::ios::app);
+  /*std::string log_filename = "server_log_"+get_timestamp()+".txt";*/
+  /*std::ofstream server_log(log_filename,std::ios::app);*/
 
-  if(!server_log){
-    std::cerr << "Failed to open server log file" << std::endl;
-    return -1;
-  }
+  /*if(!server_log){*/
+  /*  std::cerr << "Failed to open server log file" << std::endl;*/
+  /*  return -1;*/
+  /*}*/
 
   if((server_fd = socket(AF_INET, SOCK_STREAM,0)) == 0) {
     std::cerr << "Socket creation failed" << std::endl;
@@ -98,7 +98,7 @@ int main(){
   }
 
   std::cout << "Server is listening on port " << PORT << std::endl;
-  server_log << "Server started at" << get_timestamp() <<std::endl;
+  /*server_log << "Server started at" << get_timestamp() <<std::endl;*/
 
   while(true){
     if(( new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0){
@@ -111,7 +111,7 @@ int main(){
     int client_port = ntohs(address.sin_port);
 
     std::cout << "New client connected: " << client_ip << ":" << client_port << std::endl;
-    server_log << "New client connected at" << get_timestamp() << "- IP:" << client_ip << ", Port:"<< client_port <<std::endl;
+    /*server_log << "New client connected at" << get_timestamp() << "- IP:" << client_ip << ", Port:"<< client_port <<std::endl;*/
 
     pthread_mutex_lock(&clients_mutex);
     clients.push_back(new_socket);
@@ -128,7 +128,7 @@ int main(){
     }
   }
 
-  server_log.close();
+  /*server_log.close();*/
   close(server_fd);
   return 0;
 }
