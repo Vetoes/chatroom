@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <cstring>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -49,8 +50,8 @@ int main() {
   struct sockaddr_in server_address;
   std::string username;
 
-  /*std::cout << "Enter your username: ";*/
-  /*std::getline(std::cin,username);*/
+  std::cout << "Enter your username: ";
+  std::getline(std::cin,username);
 
     // Create socket
     if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -89,11 +90,11 @@ int main() {
     // Send messages to server
     char message[1024];
     while (true) {
-    /*std::cout << "> ";*/
-    /*if(!std::cin.getline(message,1024)){*/
-    /*  std::cout << "Exiting chat..." <<std::endl;*/
-    /*  break;*/
-    /*}*/
+    std::cout << "> " << std::flush;
+    if(!std::cin.getline(message,1024)){
+      std::cout << "Exiting chat..." <<std::endl;
+      break;
+    }
     if(std::string(message) == "/quit"){
       std::cout << "Exiting chat..." << std::endl;
       break;
@@ -104,9 +105,10 @@ int main() {
 
     /*chat_log << formatted_message <<std::endl;*/
 
-        std::cin.getline(message, 1024);
-        /*send(client_socket, message, strlen(message), 0);*/
-        send(client_socket, formatted_message.c_str(), formatted_message.length(), 0);
+  
+    /*std::cin.getline(message, 1024);*/
+    /*send(client_socket, message, strlen(message), 0);*/
+    send(client_socket, formatted_message.c_str(), formatted_message.length(), 0);
     }
   /*chat_log.close();*/
     close(client_socket);
