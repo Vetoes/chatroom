@@ -1,3 +1,5 @@
+#include "server.h"
+/*#include "server.cpp"*/
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -71,3 +73,4 @@ int main() {
     close(client_socket);
     return 0;
 }
+
